@@ -64,4 +64,12 @@ public class Carta {
 	public void setValue(int value) {
 		this.value = value;
 	}
+
+	@Override
+	public String toString() {
+		return "Carta [id=" + id + ", name=" + name + ", summonCost=" + summonCost + ", attack=" + attack + ", defense="
+				+ defense + ", value=" + value + "]";
+	}
+	
+	
 }
