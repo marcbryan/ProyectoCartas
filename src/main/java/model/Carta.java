@@ -1,7 +1,7 @@
 package model;
 
 public class Carta {
-	private int id;
+	private int cardId;
 	private String name;
 	private int summonCost;
 	private int attack;
@@ -9,7 +9,7 @@ public class Carta {
 	private int value;
 	
 	public Carta(int id, String name, int summonCost, int attack, int defense, int value) {
-		this.id = id;
+		this.cardId = id;
 		this.name = name;
 		this.summonCost = summonCost;
 		this.attack = attack;
@@ -18,7 +18,7 @@ public class Carta {
 	}
 
 	public int getId() {
-		return id;
+		return cardId;
 	}
 	
 	public String getName() {
@@ -42,7 +42,7 @@ public class Carta {
 	}
 	
 	public void setId(int id) {
-		this.id = id;
+		this.cardId = id;
 	}
 	
 	public void setName(String name) {
@@ -67,7 +67,7 @@ public class Carta {
 
 	@Override
 	public String toString() {
-		return "Carta [id=" + id + ", name=" + name + ", summonCost=" + summonCost + ", attack=" + attack + ", defense="
+		return "Carta [id=" + cardId + ", name=" + name + ", summonCost=" + summonCost + ", attack=" + attack + ", defense="
 				+ defense + ", value=" + value + "]";
 	}
 	

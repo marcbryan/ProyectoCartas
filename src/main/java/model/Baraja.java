@@ -1,40 +1,48 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Baraja {
-	private String deckName;
-	private int deckValue;
-	private ArrayList<Carta> deck;
+	private String DeckName;
+	private int DeckValue;
+	private List<Carta> Deck = new ArrayList<Carta>();
 	
-	public Baraja(String deckName, int deckValue, ArrayList<Carta> deck) {
-		this.deckName = deckName;
-		this.deckValue = deckValue;
-		this.deck = deck;
+	public Baraja() {}
+	
+	public Baraja(String deckName, int deckValue, List<Carta> deck) {
+		this.DeckName = deckName;
+		this.DeckValue = deckValue;
+		this.Deck = deck;
 	}
 
 	public String getDeckName() {
-		return deckName;
+		return DeckName;
 	}
 
 	public int getDeckValue() {
-		return deckValue;
+		return DeckValue;
 	}
 
-	public ArrayList<Carta> getDeck() {
-		return deck;
+	public List<Carta> getDeck() {
+		return Deck;
 	}
 
 	public void setDeckName(String deckName) {
-		this.deckName = deckName;
+		this.DeckName = deckName;
 	}
 
 	public void setDeckValue(int deckValue) {
-		this.deckValue = deckValue;
+		this.DeckValue = deckValue;
 	}
 
-	public void setDeck(ArrayList<Carta> deck) {
-		this.deck = deck;
+	public void setDeck(List<Carta> deck) {
+		this.Deck = deck;
+	}
+
+	@Override
+	public String toString() {
+		return "Baraja [deckName=" + DeckName + ", deckValue=" + DeckValue + ", deck=" + Deck + "]";
 	}
 	
 }
