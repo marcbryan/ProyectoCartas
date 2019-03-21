@@ -31,21 +31,8 @@ public class CartasDAOImpl implements ICartasDAO {
 	private final String db_name = "cartas";
 	private final String URI = "xmldb:exist://localhost:8080/exist/xmlrpc" + db_name;
 
-	private final String xquery = "xquery version \"3.1\";\r\n" + "for $c in doc(\"cartas/cartas.xml\")//card\r\n"
+	private final String xquery = "xquery version \"3.1\";\r\n"+ "for $c in doc(\"cartas/card_collection.xml\")//card\r\n"
 			+ "return $c";
-
-	public static void main(String[] args) {
-		// Pruebas
-		CartasDAOImpl dao = new CartasDAOImpl();
-		List<Carta> cartas = dao.loadCards();
-		for (int i = 0; i < cartas.size(); i++) {
-			System.out.println(cartas.get(i).toString());
-		}
-		// System.out.println("Insertado en mongodb? "+dao.saveDeck(new Baraja("Mazo de
-		// prueba", 6, cartas)));
-		// System.out.println(dao.loadDeck("Mazo de prueba").toString());
-		// dao.loadDeck("Mazo de prueba").toString();
-	}
 
 	/**
 	 * Este método carga todas las cartas que hayan en la colección de exist-db
@@ -65,7 +52,7 @@ public class CartasDAOImpl implements ICartasDAO {
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
 			// Conectar a eXist-db
-			col = DatabaseManager.getCollection(URI);
+			col = DatabaseManager.getCollection(URI); //, "admin", "admin"); //si se utiliza user y password
 			XPathQueryService xpqs = (XPathQueryService) col.getService("XPathQueryService", "1.0");
 			xpqs.setProperty("indent", "yes");
 			// Ejecutar la consulta
@@ -80,7 +67,7 @@ public class CartasDAOImpl implements ICartasDAO {
 				document = node.getOwnerDocument();
 			}
 
-			// Guardamos todos los elementos con el nombre carta en un NodeList
+			// Guardamos todos los elementos con la etiqueta carta en un NodeList
 			NodeList nodeList = document.getElementsByTagName("card");
 			for (int index = 0; index < nodeList.getLength(); index++) {
 				// Coger un elemento de la lista (una carta)
@@ -150,11 +137,12 @@ public class CartasDAOImpl implements ICartasDAO {
 		MongoCollection<org.bson.Document> collection = database.getCollection("decks");
 		// Buscar un mazo por su nombre
 		org.bson.Document doc = collection.find(Filters.eq("DeckName", deckName)).projection(Projections.excludeId()).first();
-		Gson gson = new Gson();
-		String json = doc.toJson();
-		// System.out.println(json);
-		Baraja baraja = gson.fromJson(json, Baraja.class);
-		//System.out.println(baraja.toString());
+		Baraja baraja = null;
+		if (doc != null) {
+			Gson gson = new Gson();
+			String json = doc.toJson();
+			baraja = gson.fromJson(json, Baraja.class);
+		}
 		mongoClient.close();
 		return baraja;
 	}

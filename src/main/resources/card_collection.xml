@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cards>
+  <card id="1">
+    <name>Trepadora embrujada</name>
+    <summonCost>2</summonCost>
+    <attack>1</attack>
+    <defense>2</defense>
+    <value>3</value>
+  </card>
+  <card id="2">
+    <name>Trituradora pilotada</name>
+    <summonCost>4</summonCost>
+    <attack>4</attack>
+    <defense>3</defense>
+    <value>5</value>
+  </card>
+  <card id="3">
+	<name>Draco azur</name>
+    <summonCost>5</summonCost>
+    <attack>4</attack>
+    <defense>4</defense>
+    <value>6</value>
+  </card>
+  <card id="4">
+	<name>Gusano de sangre</name>
+    <summonCost>5</summonCost>
+    <attack>4</attack>
+    <defense>4</defense>
+    <value>5</value>
+  </card>
+  <card id="5">
+	<name>Bucanero</name>
+    <summonCost>1</summonCost>
+    <attack>2</attack>
+    <defense>1</defense>
+    <value>1</value>
+  </card>
+  <card id="6">
+	<name>Caballo de marfil</name>
+    <summonCost>6</summonCost>
+    <attack>4</attack>
+    <defense>4</defense>
+    <value>5</value>
+  </card>
+  <card id="7">
+	<name>Minibot escudado</name>
+    <summonCost>2</summonCost>
+    <attack>2</attack>
+    <defense>2</defense>
+    <value>3</value>
+  </card>
+  <card id="8">
+	<name>Crinalta de la sabana</name>
+    <summonCost>6</summonCost>
+    <attack>6</attack>
+    <defense>5</defense>
+    <value>7</value>
+  </card>
+  <card id="9">
+	<name>Defensor de Argus</name>
+    <summonCost>4</summonCost>
+    <attack>2</attack>
+    <defense>3</defense>
+    <value>3</value>
+  </card>
+  <card id="10">
+	<name>Despiertallamas</name>
+    <summonCost>3</summonCost>
+    <attack>2</attack>
+    <defense>4</defense>
+    <value>4</value>
+  </card>
+  <card id="11">
+	<name>Abisario</name>
+    <summonCost>1</summonCost>
+    <attack>1</attack>
+    <defense>3</defense>
+    <value>1</value>
+  </card>
+  <card id="12">
+	<name>Leeroy Jenkins</name>
+    <summonCost>5</summonCost>
+    <attack>6</attack>
+    <defense>2</defense>
+    <value>6</value>
+  </card>
+  <card id="13">
+	<name>Contrincante misterioso</name>
+    <summonCost>6</summonCost>
+    <attack>6</attack>
+    <defense>6</defense>
+    <value>8</value>
+  </card>
+  <card id="14">
+	<name>Sanabot antiguo</name>
+    <summonCost>5</summonCost>
+    <attack>3</attack>
+    <defense>3</defense>
+    <value>4</value>
+  </card>
+  <card id="15">
+	<name>Secretista</name>
+    <summonCost>1</summonCost>
+    <attack>1</attack>
+    <defense>2</defense>
+    <value>1</value>
+  </card>
+</cards>
