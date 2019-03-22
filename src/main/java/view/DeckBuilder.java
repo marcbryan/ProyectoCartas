@@ -43,6 +43,9 @@ public class DeckBuilder extends JFrame {
 	private JButton btnSaveDeck;
 	private JButton toDeck;
 	private JButton toList;
+	
+	/** Si ha cargado el mazo será true */
+	private boolean deckLoaded;
 
 	/**
 	 * Launch the application.
@@ -166,6 +169,7 @@ public class DeckBuilder extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String deckname = tf_deckname.getText();
 				if (!deckname.equals("")) {
+					// Como el metodo loadDeck() devuelve una baraja compruebo si hay una baraja con el nombre elegido
 					if (dao.loadDeck(deckname) == null) {
 						if (dao.saveDeck(new Baraja(deckname, calcDeckValue(), clm_mazo.getCartas()))) {
 							clm_cartas.clear();
@@ -178,8 +182,19 @@ public class DeckBuilder extends JFrame {
 							JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo "+deckname+" guardado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
 						}
 					} else {
-						JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo "+deckname+" ya existe", "Alerta", JOptionPane.WARNING_MESSAGE);
-						//TODO: si hay que guardar cambios en mazo ya creado, faltará el código
+						// Si el mazo es uno que el usuario ha cargado
+						if (deckLoaded) {
+							if (JOptionPane.showConfirmDialog(DeckBuilder.this, "Quieres guardar los cambios del mazo "+deckname+"?", "Alerta",
+							        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+								if (dao.updateDeck(new Baraja(deckname, calcDeckValue(), clm_mazo.getCartas()))) {
+									deckLoaded = false;
+									JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo "+deckname+" actualizado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+								}
+							}
+						} else {
+							// El mazo es otro, por lo tanto, no podemos modificarlo
+							JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo "+deckname+" ya existe", "Alerta", JOptionPane.WARNING_MESSAGE);
+						}
 					}
 				} else {
 					JOptionPane.showMessageDialog(DeckBuilder.this, "No puedes guardar un mazo sin nombre", "Alerta", JOptionPane.WARNING_MESSAGE);
@@ -240,6 +255,7 @@ public class DeckBuilder extends JFrame {
 							clm_mazo.addCarta(c);
 						}
 						lblValue.setText("<html>Deck value: <b>"+calcDeckValue()+"<b></html>");
+						deckLoaded = true;
 					} else {
 						JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo "+deckname+" no existe", "Alerta", JOptionPane.WARNING_MESSAGE);
 						tf_deckname.setText("");

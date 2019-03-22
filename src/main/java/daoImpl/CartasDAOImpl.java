@@ -21,6 +21,7 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
+import com.mongodb.client.result.UpdateResult;
 
 import idao.ICartasDAO;
 import model.Baraja;
@@ -145,6 +146,26 @@ public class CartasDAOImpl implements ICartasDAO {
 		}
 		mongoClient.close();
 		return baraja;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	public boolean updateDeck(Baraja baraja) {
+		MongoClient mongoClient = new MongoClient();
+		MongoDatabase database = mongoClient.getDatabase("mongo");
+		MongoCollection<org.bson.Document> collection = database.getCollection("decks");
+		//Convertir la baraja a JSON
+		String json = new Gson().toJson(baraja);
+		org.bson.Document doc = org.bson.Document.parse(json);
+		//Actualiza el mazo que tenga el nombre correspondiente
+		UpdateResult updateResult = collection.replaceOne(Filters.eq("DeckName", baraja.getDeckName()), doc);
+		mongoClient.close();
+		if (updateResult.getModifiedCount() > 0) {
+			return true;
+		}
+		return false;
 	}
 
 }
