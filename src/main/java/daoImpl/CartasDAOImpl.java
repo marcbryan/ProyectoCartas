@@ -53,7 +53,7 @@ public class CartasDAOImpl implements ICartasDAO {
 			database.setProperty("create-database", "true");
 			DatabaseManager.registerDatabase(database);
 			// Conectar a eXist-db
-			col = DatabaseManager.getCollection(URI); //, "admin", "admin"); //si se utiliza user y password
+			col = DatabaseManager.getCollection(URI);//, "admin", "admin"); //si se utiliza user y password
 			XPathQueryService xpqs = (XPathQueryService) col.getService("XPathQueryService", "1.0");
 			xpqs.setProperty("indent", "yes");
 			// Ejecutar la consulta
@@ -116,8 +116,11 @@ public class CartasDAOImpl implements ICartasDAO {
 			MongoClient mongoClient = new MongoClient();
 			MongoDatabase database = mongoClient.getDatabase("mongo");
 			MongoCollection<org.bson.Document> collection = database.getCollection("decks");
+			// Convertir la baraja a JSON
 			String json = new Gson().toJson(baraja);
+			// Cpnvertir el JSON a documento
 			org.bson.Document doc = org.bson.Document.parse(json);
+			// Insertar el documento
 			collection.insertOne(doc);
 			mongoClient.close();
 			return true;
@@ -141,7 +144,9 @@ public class CartasDAOImpl implements ICartasDAO {
 		Baraja baraja = null;
 		if (doc != null) {
 			Gson gson = new Gson();
+			// Convertir el documento a JSON
 			String json = doc.toJson();
+			// Convertir el JSON a baraja
 			baraja = gson.fromJson(json, Baraja.class);
 		}
 		mongoClient.close();

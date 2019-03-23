@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -179,21 +180,29 @@ public class DeckBuilder extends JFrame {
 							}
 							tf_deckname.setText("");
 							lblValue.setText("<html>Deck value: <b>"+0+"<b></html>");
-							JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo "+deckname+" guardado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+							JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo '"+deckname+"' guardado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
 						}
 					} else {
 						// Si el mazo es uno que el usuario ha cargado
 						if (deckLoaded) {
-							if (JOptionPane.showConfirmDialog(DeckBuilder.this, "Quieres guardar los cambios del mazo "+deckname+"?", "Alerta",
+							if (JOptionPane.showConfirmDialog(DeckBuilder.this, "Quieres guardar los cambios del mazo '"+deckname+"'?", "Alerta",
 							        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 								if (dao.updateDeck(new Baraja(deckname, calcDeckValue(), clm_mazo.getCartas()))) {
 									deckLoaded = false;
-									JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo "+deckname+" actualizado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+									JOptionPane.showMessageDialog(DeckBuilder.this, "Mazo '"+deckname+"' actualizado correctamente", "Información", JOptionPane.INFORMATION_MESSAGE);
+									clm_cartas.clear();
+									clm_mazo.clear();
+									for (Carta c : cartas) {
+										clm_cartas.addCarta(c);
+									}
+									tf_deckname.setText("");
+									tf_deckname.setEditable(true);
+									lblValue.setText("<html>Deck value: <b>"+0+"<b></html>");
 								}
 							}
 						} else {
 							// El mazo es otro, por lo tanto, no podemos modificarlo
-							JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo "+deckname+" ya existe", "Alerta", JOptionPane.WARNING_MESSAGE);
+							JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo '"+deckname+"' ya existe", "Alerta", JOptionPane.WARNING_MESSAGE);
 						}
 					}
 				} else {
@@ -209,22 +218,35 @@ public class DeckBuilder extends JFrame {
 		btnRndDeck.setEnabled(false);
 		btnRndDeck.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//Limpiamos los dos paneles para crear el mazo aleatorio
+				// Limpiamos los dos paneles para crear el mazo aleatorio
 				clm_cartas.clear();
 				clm_mazo.clear();
+				
+				// Copio el ArrayList con todas las cartas en otro diferente (si no lo hiciera tendria que cargar de nuevo las cartas)
+				List<Carta> copiaCartas = new ArrayList<Carta>();
+				copiaCartas.addAll(cartas);
+				
 				int value = 0;
-				for (Carta c : cartas) {
-					int rnd = (int) Math.round(Math.random());
-					if (rnd == 1) {
-						if ((value+c.getValue()) <= 20) {
-							value += c.getValue();
-							clm_mazo.addCarta(c);
-						} else {
-							clm_cartas.addCarta(c);
-						}
+				while (copiaCartas.size() > 0) {
+					int rnd = 0;
+					if (copiaCartas.size() > 1) {
+						// Este random consiste en seleccionar un índice aleatorio del ArrayList de cartas, es decir,
+						// seleccionar una carta aleatoria de todas las cartas disponibles. El truco está en eliminar la
+						// carta del ArrayList 'copiaCartas' cuando se añada al mazo o a al panel de cartas.
+						// Si el tamaño de array es 1, no se hará el random ya que es inútil
+						rnd = (int) (Math.random()*(copiaCartas.size()-1))+1;
+					}
+					// Si la suma del valor del mazo y la del valor de la carta seleccionada es menor o igual a 20 la guardamos en el mazo
+					Carta c = copiaCartas.get(rnd);
+					if ((c.getValue()+value) <= 20) {
+						clm_mazo.addCarta(c);
+						value += c.getValue();
+						// IMPORTANTE! borro la carta del ArrayList para que en el nuevo random no vuelva a tocar la misma carta
+						copiaCartas.remove(rnd);
 					} else {
-						//Las cartas que no se añadan al mazo se verán en la lista de cartas
+						// Si no se cumple la condición, añado la carta a la lista de cartas y la borro del ArrayList para que no vuelva a tocar la misma
 						clm_cartas.addCarta(c);
+						copiaCartas.remove(rnd);
 					}
 				}
 				lblValue.setText("<html>Deck value: <b>"+value+"<b></html>");
@@ -246,22 +268,38 @@ public class DeckBuilder extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				String deckname = tf_deckname.getText();
 				if (!deckname.equals("")) {
-					Baraja deck = dao.loadDeck(deckname);
-					if (deck != null) {
-						//Limpiamos el contenido de las dos listas
-						clm_mazo.clear();
-						clm_cartas.clear();
-						for (Carta c : deck.getDeck()) {
-							clm_mazo.addCarta(c);
+					if (!tf_deckname.isEditable()) {
+						if (JOptionPane.showConfirmDialog(DeckBuilder.this, "Quieres cargar otro mazo?", "Alerta",
+						        JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+							tf_deckname.setText("");
+							tf_deckname.setEditable(true);
+							deckLoaded = false;
+							clm_cartas.clear();
+							clm_mazo.clear();
+							for (Carta c : cartas) {
+								clm_cartas.addCarta(c);
+							}
+							lblValue.setText("<html>Deck value: <b>"+0+"<b></html>");
 						}
-						lblValue.setText("<html>Deck value: <b>"+calcDeckValue()+"<b></html>");
-						deckLoaded = true;
 					} else {
-						JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo "+deckname+" no existe", "Alerta", JOptionPane.WARNING_MESSAGE);
-						tf_deckname.setText("");
+						Baraja deck = dao.loadDeck(deckname);
+						if (deck != null) {
+							//Limpiamos el contenido de las dos listas
+							clm_mazo.clear();
+							clm_cartas.clear();
+							for (Carta c : deck.getDeck()) {
+								clm_mazo.addCarta(c);
+							}
+							lblValue.setText("<html>Deck value: <b>"+calcDeckValue()+"<b></html>");
+							deckLoaded = true;
+							tf_deckname.setEditable(false);
+						} else {
+							JOptionPane.showMessageDialog(DeckBuilder.this, "El mazo '"+deckname+"' no existe", "Alerta", JOptionPane.WARNING_MESSAGE);
+							tf_deckname.setText("");
+						}
 					}
 				} else {
-					JOptionPane.showMessageDialog(DeckBuilder.this, "Escribe un nombre para buscar un mazo", "Alerta", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DeckBuilder.this, "Escribe un nombre para cargar un mazo", "Alerta", JOptionPane.WARNING_MESSAGE);
 				}
 			}
 		});
@@ -300,5 +338,5 @@ public class DeckBuilder extends JFrame {
 		btnLoadCards.setEnabled(false);
 		btnLoadCards.setToolTipText("Ya has cargado las cartas!");
 	}
-
+	
 }
