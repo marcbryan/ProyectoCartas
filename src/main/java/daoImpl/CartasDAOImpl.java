@@ -118,7 +118,7 @@ public class CartasDAOImpl implements ICartasDAO {
 			MongoCollection<org.bson.Document> collection = database.getCollection("decks");
 			// Convertir la baraja a JSON
 			String json = new Gson().toJson(baraja);
-			// Cpnvertir el JSON a documento
+			// Convertir el JSON a documento
 			org.bson.Document doc = org.bson.Document.parse(json);
 			// Insertar el documento
 			collection.insertOne(doc);

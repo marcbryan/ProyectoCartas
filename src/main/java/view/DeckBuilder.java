@@ -90,7 +90,7 @@ public class DeckBuilder extends JFrame {
 	        }
 	    });
 		lista_cartas.setModel(clm_cartas);
-		lista_cartas.setBounds(83, 71, 230, 320);
+		lista_cartas.setBounds(48, 71, 265, 320);
 		contentPane.add(lista_cartas);
 		
 		lista_mazo = new JList<Carta>();
@@ -107,7 +107,7 @@ public class DeckBuilder extends JFrame {
 	        }
 	    });
 		lista_mazo.setModel(clm_mazo);
-		lista_mazo.setBounds(464, 71, 230, 320);
+		lista_mazo.setBounds(464, 71, 265, 320);
 		contentPane.add(lista_mazo);
 		
 		toDeck = new JButton("\u2192"); // ->
