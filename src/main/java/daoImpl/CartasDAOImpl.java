@@ -154,8 +154,9 @@ public class CartasDAOImpl implements ICartasDAO {
 	}
 	
 	/**
-	 * 
-	 * @return
+	 * Actualiza un mazo en MongoDB
+	 * @param baraja - La baraja a actualizar
+	 * @return Devuelve <b>true</b> si se ha actualizado correctamente y <b>false</b> en caso contrario 
 	 */
 	public boolean updateDeck(Baraja baraja) {
 		MongoClient mongoClient = new MongoClient();
@@ -163,6 +164,7 @@ public class CartasDAOImpl implements ICartasDAO {
 		MongoCollection<org.bson.Document> collection = database.getCollection("decks");
 		//Convertir la baraja a JSON
 		String json = new Gson().toJson(baraja);
+		// Convertir el JSON a documento
 		org.bson.Document doc = org.bson.Document.parse(json);
 		//Actualiza el mazo que tenga el nombre correspondiente
 		UpdateResult updateResult = collection.replaceOne(Filters.eq("DeckName", baraja.getDeckName()), doc);
